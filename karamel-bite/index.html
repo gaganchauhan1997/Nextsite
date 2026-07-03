@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karamel Bite Cakes & Bakery — Ring Road, opp. Maharani Bagh</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --caramel: #c68544;
+    --caramel-deep: #a0632c;
+    --caramel-dark: #6b3a15;
+    --cream: #fdf4e3;
+    --cream-warm: #fae8c8;
+    --butter: #f9c74f;
+    --butter-glow: #ffd97a;
+    --choco: #3a2416;
+    --choco-soft: #5a3826;
+    --pink: #f8a4a4;
+    --mint: #a8d8b9;
+    --lilac: #c9b6e4;
+    --shadow: 0 10px 40px rgba(107, 58, 21, 0.15);
+    --shadow-lg: 0 20px 60px rgba(107, 58, 21, 0.25);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--choco);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Fredoka', 'Baloo 2', 'Comic Sans MS', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--choco);
+  }
+
+  /* PRELOADER */
+  #preloader {
+    position: fixed; inset: 0; z-index: 9999;
+    background: radial-gradient(ellipse at center, var(--cream-warm), var(--cream));
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.8s ease, visibility 0.8s;
+  }
+  #preloader.hidden { opacity: 0; visibility: hidden; }
+  .preloader-word {
+    font-family: 'Fredoka', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    font-weight: 700;
+    background: linear-gradient(180deg, var(--caramel) 0%, var(--caramel-deep) 55%, var(--caramel-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    letter-spacing: -0.02em;
+  }
+  .preloader-word::after {
+    content: '';
+    position: absolute;
+    left: 50%; bottom: -8px;
+    width: 60%; height: 6px;
+    background: linear-gradient(90deg, transparent, var(--caramel), transparent);
+    transform: translateX(-50%);
+    border-radius: 6px;
+    animation: dripline 2s ease-in-out infinite;
+  }
+  .drip {
+    position: absolute;
+    width: 14px; height: 24px;
+    background: linear-gradient(180deg, var(--caramel) 0%, var(--caramel-deep) 100%);
+    border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+    top: 100%;
+    filter: drop-shadow(0 4px 6px rgba(107,58,21,0.3));
+    animation: drop 1.8s ease-in infinite;
+  }
+  .drip:nth-child(2) { left: 15%; animation-delay: 0.2s; }
+  .drip:nth-child(3) { left: 40%; animation-delay: 0.7s; }
+  .drip:nth-child(4) { left: 65%; animation-delay: 0.4s; }
+  .drip:nth-child(5) { left: 85%; animation-delay: 0.9s; }
+  @keyframes drop {
+    0% { transform: translateY(-10px) scaleY(0.6); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: translateY(40px) scaleY(1.4); opacity: 0; }
+  }
+  @keyframes dripline {
+    0%,100% { transform: translateX(-50%) scaleX(0.6); opacity: 0.5; }
+    50% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+  }
+
+  /* HEADER */
+  header {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(253, 244, 227, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(198, 133, 68, 0.15);
+    transition: box-shadow 0.3s;
+  }
+  header.scrolled { box-shadow: 0 4px 20px rgba(107,58,21,0.08); }
+  .nav-wrap {
+    max-width: 1280px; margin: 0 auto;
+    padding: 14px 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px;
+  }
+  .brand {
+    font-family: 'Fredoka', sans-serif;
+    font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+    font-weight: 700;
+    color: var(--caramel-dark);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+    letter-spacing: -0.01em;
+  }
+  .brand-mark {
+    width: 36px; height: 36px;
+    background: radial-gradient(circle at 30% 30%, var(--butter-glow), var(--caramel) 60%, var(--caramel-deep));
+    border-radius: 50%;
+    position: relative;
+    box-shadow: inset -4px -4px 8px rgba(107,58,21,0.35), 0 4px 10px rgba(198,133,68,0.4);
+  }
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 40%; height: 40%;
+    background: var(--cream);
+    border-radius: 50%;
+    transform: translate(-50%,-50%);
+    box-shadow: inset 2px 2px 4px rgba(107,58,21,0.2);
+  }
+  .brand-text { line-height: 1; }
+  .brand-text small { display: block; font-size: 0.6rem; font-weight: 500; color: var(--caramel-deep); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 3px; }
+
+  nav.top-nav { display: flex; gap: 6px; }
+  nav.top-nav a {
+    color: var(--choco-soft);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: all 0.25s;
+    position: relative;
+  }
+  nav.top-nav a:hover { background: var(--cream-warm); color: var(--caramel-dark); }
+  nav.top-nav a.active { background: var(--caramel); color: white; }
+
+  .hamburger {
+    background: var(--caramel);
+    color: white;
+    border: none;
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(198,133,68,0.4);
+    transition: transform 0.2s;
+  }
+  .hamburger:hover { transform: scale(1.05); }
+  .hamburger span { width: 20px; height: 2.5px; background: white; border-radius: 2px; }
+
+  @media (max-width: 860px) {
+    nav.top-nav { display: none; }
+  }
+
+  /* SIDEBAR */
+  .sidebar-overlay {
+    position: fixed; inset: 0;
+    background: rgba(58,36,22,0.5);
+    z-index: 200;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s;
+    backdrop-filter: blur(4px);
+  }
+  .sidebar-overlay.open { opacity: 1; visibility: visible; }
+  .sidebar {
+    position: fixed; top: 0; right: -420px;
+    width: min(90vw, 380px); height: 100vh;
+    background: var(--cream);
+    z-index: 201;
+    transition: right 0.5s cubic-bezier(0.65,0,0.35,1);
+    display: flex; flex-direction: column;
+    box-shadow: -20px 0 60px rgba(107,58,21,0.2);
+  }
+  .sidebar.open { right: 0; }
+  .sidebar-header {
+    padding: 24px;
+    background: linear-gradient(135deg, var(--caramel), var(--caramel-deep));
+    color: white;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative;
+  }
+  .sidebar-header h3 {
+    font-size: 1.4rem;
+    color: white;
+    letter-spacing: 0.05em;
+  }
+  .sidebar-header::after {
+    content: '';
+    position: absolute;
+    bottom: -14px; left: 0; right: 0;
+    height: 14px;
+    background: repeating-linear-gradient(90deg,
+      var(--caramel) 0 20px,
+      var(--caramel-deep) 20px 22px,
+      var(--caramel) 22px 40px);
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 90% 30%, 85% 100%, 80% 40%, 75% 100%, 70% 30%, 65% 100%, 60% 40%, 55% 100%, 50% 30%, 45% 100%, 40% 40%, 35% 100%, 30% 30%, 25% 100%, 20% 40%, 15% 100%, 10% 30%, 5% 100%, 0 40%);
+  }
+  .sidebar-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sidebar-nav { padding: 30px 24px 24px; flex: 1; overflow-y: auto; }
+  .sidebar-nav a {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--choco);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(107,58,21,0.06);
+    transition: all 0.25s;
+    border: 2px solid transparent;
+  }
+  .sidebar-nav a:hover {
+    border-color: var(--caramel);
+    transform: translateX(-4px);
+    background: var(--cream-warm);
+  }
+  .cat-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  /* MAIN */
+  main { padding-top: 80px; min-height: 100vh; }
+  .page { display: none; animation: pageFade 0.7s ease; }
+  .page.active { display: block; }
+  @keyframes pageFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+
+  /* HERO HOME */
+  .hero {
+    position: relative;
+    min-height: 90vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    padding: 60px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .hero-content { z-index: 2; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: white;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--caramel-dark);
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+  }
+  .hero-badge .star { color: var(--butter); }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(180deg, var(--caramel) 0%, var(--caramel-deep) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    position: relative;
+  }
+  .hero-tag {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    color: var(--choco-soft);
+    margin-bottom: 32px;
+    max-width: 520px;
+  }
+  .cta-group { display: flex; flex-wrap: wrap; gap: 14px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 26px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.25s;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    box-shadow: 0 6px 20px rgba(198,133,68,0.35);
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--caramel), var(--caramel-deep));
+    color: white;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(198,133,68,0.5); }
+  .btn-whatsapp {
+    background: #25D366;
+    color: white;
+    box-shadow: 0 6px 20px rgba(37,211,102,0.35);
+  }
+  .btn-whatsapp:hover { transform: translateY(-3px); background: #1eb955; }
+  .btn-outline {
+    background: white;
+    color: var(--caramel-dark);
+    box-shadow: 0 4px 14px rgba(107,58,21,0.1);
+  }
+  .btn-outline:hover { background: var(--cream-warm); transform: translateY(-2px); }
+
+  .hero-canvas-wrap {
+    position: relative;
+    aspect-ratio: 1;
+    max-height: 620px;
+  }
+  #heroCanvas {
+    width: 100%; height: 100%;
+    display: block;
+  }
+  .hero-glow {
+    position: absolute;
+    inset: 10%;
+    background: radial-gradient(circle, var(--butter-glow) 0%, transparent 60%);
+    filter: blur(50px);
+    z-index: -1;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; text-align: center; padding-top: 30px; }
+    .hero-content { order: 2; }
+    .hero-canvas-wrap { order: 1; max-height: 340px; margin: 0 auto; width: 100%; max-width: 400px; }
+    .cta-group { justify-content: center; }
+    .hero-tag { margin-left: auto; margin-right: auto; }
+  }
+
+  /* TRUST BAR */
+  .trust-bar {
+    background: linear-gradient(135deg, var(--choco) 0%, var(--choco-soft) 100%);
+    color: var(--cream);
+    padding: 24px 5%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .trust-bar-inner {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    font-weight: 600;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  .trust-item { display: flex; align-items: center; gap: 10px; }
+  .trust-item .icon { color: var(--butter); font-size: 1.3rem; }
+  .sprinkle-strip {
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  /* SECTIONS */
+  section.block { padding: 80px 5%; }
+  .section-head { text-align: center; margin-bottom: 50px; }
+  .section-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--caramel);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .section-head h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    margin-bottom: 12px;
+  }
+  .section-head p { color: var(--choco-soft); max-width: 600px; margin: 0 auto; }
+
+  /* CATEGORY CARDS */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .cat-card {
+    background: white;
+    border-radius: 28px;
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .cat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+  .cat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, var(--cream-warm), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .cat-card:hover::before { opacity: 1; }
+  .cat-illustration {
+    position: relative;
+    width: 110px; height: 110px;
+    margin: 0 auto 20px;
+    z-index: 2;
+  }
+  .cat-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    position: relative; z-index: 2;
+  }
+  .cat-card p {
+    font-size: 0.92rem;
+    color: var(--choco-soft);
+    position: relative; z-index: 2;
+    line-height: 1.5;
+  }
+
+  /* Confection illustrations */
+  .cake-illust {
+    background: linear-gradient(180deg, var(--pink) 0%, var(--pink) 30%, var(--cream) 30%, var(--cream) 55%, var(--caramel) 55%);
+    border-radius: 14px 14px 8px 8px;
+    height: 90px; width: 90px; margin: 10px auto 0;
+    position: relative;
+    box-shadow: inset -4px -4px 0 rgba(0,0,0,0.05);
+  }
+  .cake-illust::before {
+    content: '';
+    position: absolute;
+    top: -14px; left: 50%;
+    width: 4px; height: 18px;
+    background: var(--butter);
+    transform: translateX(-50%);
+    border-radius: 2px;
+  }
+  .cake-illust::after {
+    content: '';
+    position: absolute;
+    top: -22px; left: 50%;
+    width: 10px; height: 10px;
+    background: radial-gradient(circle, var(--butter-glow), var(--butter));
+    transform: translateX(-50%);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--butter);
+    animation: flicker 1.5s ease-in-out infinite;
+  }
+  @keyframes flicker {
+    0%,100% { transform: translateX(-50%) scale(1); opacity: 1; }
+    50% { transform: translateX(-50%) scale(1.15); opacity: 0.85; }
+  }
+
+  .pastry-illust {
+    width: 100px; height: 90px; margin: 10px auto 0;
+    background: linear-gradient(180deg, var(--caramel) 0%, var(--caramel-deep) 100%);
+    border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+    position: relative;
+    box-shadow: inset -6px -6px 0 rgba(0,0,0,0.1);
+  }
+  .pastry-illust::before {
+    content: '';
+    position: absolute;
+    top: 10%; left: 15%;
+    width: 30%; height: 20%;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    filter: blur(4px);
+  }
+  .pastry-illust::after {
+    content: '🍓';
+    position: absolute;
+    top: -8px; right: 15%;
+    font-size: 1.5rem;
+  }
+
+  .cookie-illust {
+    width: 95px; height: 95px; margin: 8px auto 0;
+    background: radial-gradient(circle at 40% 40%, var(--caramel), var(--caramel-deep));
+    border-radius: 50%;
+    position: relative;
+    box-shadow: inset -6px -6px 0 rgba(0,0,0,0.15);
+  }
+  .cookie-illust::before, .cookie-illust::after {
+    content: '';
+    position: absolute;
+    background: var(--choco);
+    border-radius: 50%;
+  }
+  .cookie-illust::before {
+    width: 12px; height: 12px;
+    top: 25%; left: 30%;
+    box-shadow:
+      22px 8px 0 -1px var(--choco),
+      -8px 30px 0 -2px var(--choco),
+      30px 40px 0 -3px var(--choco),
+      12px 55px 0 0 var(--choco),
+      50px 22px 0 -2px var(--choco);
+  }
+
+  .box-illust {
+    width: 100px; height: 90px; margin: 10px auto 0;
+    background: linear-gradient(180deg, var(--butter) 0%, var(--butter) 40%, var(--caramel) 40%);
+    border-radius: 8px;
+    position: relative;
+    box-shadow: inset -4px -4px 0 rgba(0,0,0,0.08);
+  }
+  .box-illust::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 45%;
+    width: 10%;
+    background: var(--pink);
+  }
+  .box-illust::after {
+    content: '';
+    position: absolute;
+    top: -12px; left: 50%;
+    width: 40px; height: 24px;
+    background: var(--pink);
+    transform: translateX(-50%);
+    border-radius: 50% 50% 0 0;
+    box-shadow: 0 2px 0 var(--caramel-deep);
+  }
+
+  /* HOW TO ORDER */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .step {
+    background: white;
+    border-radius: 28px;
+    padding: 40px 28px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    position: relative;
+    border: 2px solid var(--cream-warm);
+  }
+  .step-num {
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, var(--caramel), var(--caramel-deep));
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    margin: 0 auto 20px;
+    box-shadow: 0 8px 20px rgba(198,133,68,0.35);
+  }
+  .step h3 { margin-bottom: 12px; font-size: 1.25rem; }
+  .step p { color: var(--choco-soft); font-size: 0.98rem; }
+
+  .lead-note {
+    max-width: 700px;
+    margin: 40px auto 0;
+    padding: 20px 26px;
+    background: var(--butter);
+    border-radius: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--choco);
+    box-shadow: var(--shadow);
+  }
+
+  /* BAKES PAGE */
+  .bakes-intro {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 50px;
+    font-size: 1.15rem;
+    color: var(--choco-soft);
+    font-style: italic;
+  }
+  .category-block {
+    background: white;
+    border-radius: 32px;
+    padding: 50px 40px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow);
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    gap: 30px;
+    align-items: center;
+    scroll-margin-top: 100px;
+  }
+  @media (max-width: 760px) {
+    .category-block {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .category-block .cat-actions { justify-content: center; }
+  }
+  .category-block h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--caramel-dark);
+  }
+  .category-block p { color: var(--choco-soft); font-size: 1.02rem; }
+  .cat-actions { display: flex; flex-direction: column; gap: 10px; }
+  .cat-actions .btn { padding: 12px 22px; font-size: 0.9rem; }
+  .cat-illust-large { justify-self: center; }
+
+  /* ABOUT */
+  .about-hero {
+    background: linear-gradient(135deg, var(--cream-warm) 0%, var(--cream) 100%);
+    padding: 80px 5%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 20px;
+  }
+  .about-hero p { max-width: 700px; margin: 0 auto; font-size: 1.15rem; color: var(--choco-soft); }
+  .about-body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 5%;
+  }
+  .about-body p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: var(--choco-soft);
+  }
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .value {
+    background: white;
+    padding: 30px 24px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .value-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+  .value h4 { color: var(--caramel-dark); margin-bottom: 8px; font-size: 1.2rem; }
+
+  /* CONTACT */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  @media (max-width: 800px) { .contact-grid { grid-template-columns: 1fr; } }
+  .contact-card {
+    background: white;
+    border-radius: 28px;
+    padding: 40px;
+    box-shadow: var(--shadow);
+  }
+  .contact-card h3 {
+    font-size: 1.3rem;
+    color: var(--caramel-dark);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .contact-card p, .contact-card a { color: var(--choco-soft); font-size: 1.05rem; line-height: 1.7; text-decoration: none; }
+  .contact-card a:hover { color: var(--caramel); }
+  .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+
+  /* LEGAL */
+  .legal-page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 5% 80px;
+  }
+  .legal-page h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 12px;
+    color: var(--caramel-dark);
+  }
+  .legal-page .eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--caramel);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .legal-page p, .legal-page li {
+    color: var(--choco-soft);
+    margin-bottom: 14px;
+    line-height: 1.75;
+  }
+  .legal-page ol { padding-left: 20px; margin-bottom: 20px; }
+  .legal-page li { padding-left: 8px; }
+  .legal-block {
+    background: white;
+    border-radius: 28px;
+    padding: 40px;
+    box-shadow: var(--shadow);
+    margin-top: 30px;
+  }
+  @media (max-width: 600px) {
+    .legal-block { padding: 28px 22px; }
+  }
+
+  /* FOOTER */
+  footer {
+    background: linear-gradient(180deg, var(--choco) 0%, var(--choco-soft) 100%);
+    color: var(--cream);
+    padding: 60px 5% 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  footer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 20px;
+    background: repeating-linear-gradient(90deg,
+      var(--caramel) 0 40px,
+      var(--caramel-deep) 40px 42px);
+    clip-path: polygon(0 100%, 100% 100%, 100% 0, 96% 60%, 92% 20%, 88% 70%, 84% 30%, 80% 65%, 76% 25%, 72% 60%, 68% 20%, 64% 70%, 60% 30%, 56% 65%, 52% 25%, 48% 60%, 44% 20%, 40% 70%, 36% 30%, 32% 65%, 28% 25%, 24% 60%, 20% 20%, 16% 70%, 12% 30%, 8% 65%, 4% 25%, 0 60%);
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+    padding-top: 30px;
+  }
+  @media (max-width: 760px) {
+    .footer-inner { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+  }
+  .footer-brand h4 { color: white; font-size: 1.4rem; margin-bottom: 12px; }
+  .footer-brand p { color: rgba(253,244,227,0.75); font-size: 0.95rem; line-height: 1.7; }
+  footer h5 { color: var(--butter); text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.8rem; margin-bottom: 16px; }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 10px; }
+  .footer-links a { color: rgba(253,244,227,0.8); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--butter); }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid rgba(253,244,227,0.15);
+    text-align: center;
+    font-size: 0.88rem;
+    color: rgba(253,244,227,0.7);
+  }
+  .footer-bottom a { color: var(--butter); text-decoration: none; font-weight: 600; }
+  .footer-bottom a:hover { text-decoration: underline; }
+
+  /* STICKY CTAs */
+  .sticky-ctas {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    z-index: 90;
+    display: flex; flex-direction: column;
+    gap: 12px;
+  }
+  .sticky-btn {
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: white;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+    position: relative;
+  }
+  .sticky-btn:hover { transform: scale(1.1); }
+  .sticky-call { background: linear-gradient(135deg, var(--caramel), var(--caramel-deep)); }
+  .sticky-wa { background: #25D366; }
+  .sticky-btn::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    opacity: 0.4;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.2); opacity: 0; }
+  }
+
+  /* FLOATING SPRINKLES */
+  .bg-sprinkle {
+    position: absolute;
+    border-radius: 999px;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* Teaser sections */
+  .teaser-visit {
+    background: linear-gradient(135deg, var(--caramel) 0%, var(--caramel-deep) 100%);
+    color: white;
+    padding: 60px 5%;
+    text-align: center;
+    border-radius: 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+  .teaser-visit h2 { color: white; margin-bottom: 12px; font-size: clamp(1.6rem, 3.5vw, 2.2rem); }
+  .teaser-visit p { margin-bottom: 24px; opacity: 0.95; font-size: 1.1rem; }
+  .teaser-visit .btn-outline { background: white; color: var(--caramel-dark); }
+  .teaser-wrap { padding: 80px 5%; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160/build/three.min.js"></script>
+<style>
+.ha-img-placeholder{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:#f4f4f5;border:1px dashed #d4d4d8;border-radius:8px;color:#71717a;font-size:12px;font-family:system-ui,sans-serif;min-height:80px;padding:16px;box-sizing:border-box;animation:ha-img-pulse 1.5s ease-in-out infinite}
+.ha-img-placeholder.ha-failed{animation:none;opacity:.7}
+@keyframes ha-img-pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@media(prefers-color-scheme:dark){.ha-img-placeholder{background:#27272a;border-color:#3f3f46;color:#a1a1aa}}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div style="position: relative; text-align:center;">
+    <div class="preloader-word">KARAMEL BITE</div>
+    <div class="drip"></div>
+    <div class="drip"></div>
+    <div class="drip"></div>
+    <div class="drip"></div>
+    <div class="drip"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="nav-wrap">
+    <a href="#home" class="brand" data-nav>
+      <div class="brand-mark"></div>
+      <div class="brand-text">
+        Karamel Bite
+        <small>Cakes & Bakery</small>
+      </div>
+    </a>
+    <nav class="top-nav">
+      <a href="#home" data-nav>Home</a>
+      <a href="#bakes" data-nav>Our Bakes</a>
+      <a href="#order" data-nav>How to Order</a>
+      <a href="#about" data-nav>About</a>
+      <a href="#contact" data-nav>Contact</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar" aria-label="Categories menu">
+  <div class="sidebar-header">
+    <h3>CATEGORIES</h3>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close">×</button>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#bakes/celebration" data-sidebar-nav>
+      <div class="cat-icon" style="background: var(--pink);">🎂</div>
+      <div>
+        <div>Celebration Cakes</div>
+        <small style="color: var(--choco-soft); font-weight:500;">Custom designs</small>
+      </div>
+    </a>
+    <a href="#bakes/pastries" data-sidebar-nav>
+      <div class="cat-icon" style="background: var(--caramel);">🧁</div>
+      <div>
+        <div>Pastries & Desserts</div>
+        <small style="color: var(--choco-soft); font-weight:500;">Fresh daily</small>
+      </div>
+    </a>
+    <a href="#bakes/cookies" data-sidebar-nav>
+      <div class="cat-icon" style="background: var(--butter);">🍪</div>
+      <div>
+        <div>Cookies & Dry Cakes</div>
+        <small style="color: var(--choco-soft); font-weight:500;">Teatime favourites</small>
+      </div>
+    </a>
+    <a href="#bakes/bulk" data-sidebar-nav>
+      <div class="cat-icon" style="background: var(--mint);">🎉</div>
+      <div>
+        <div>Occasion & Bulk</div>
+        <small style="color: var(--choco-soft); font-weight:500;">Parties & events</small>
+      </div>
+    </a>
+  </nav>
+</aside>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<div class="page" id="page-home">
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="star">★</span> 4.8 · 520+ Google reviews
+      </div>
+      <h1>Fresh bakes,<br>custom cakes,<br>& <span class="accent">520+ reasons</span><br>to love us.</h1>
+      <p class="hero-tag">A neighbourhood bakery on Ring Road, opposite Maharani Bagh — celebration cakes, everyday pastries and teatime classics, made to order.</p>
+      <div class="cta-group">
+        <a href="tel:+919871299037" class="btn btn-primary">📞 Order on Call: +91 98712 99037</a>
+        <a href="https://wa.me/919871299037" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">💬 WhatsApp Us</a>
+      </div>
+    </div>
+    <div class="hero-canvas-wrap">
+      <div class="hero-glow"></div>
+      <canvas id="heroCanvas"></canvas>
+    </div>
+  </section>
+
+  <section class="trust-bar">
+    <div class="sprinkle-strip" id="sprinkleStrip"></div>
+    <div class="trust-bar-inner">
+      <div class="trust-item"><span class="icon">★</span> 4.8 rating · 520+ reviews</div>
+      <div class="trust-item"><span class="icon">🥐</span> Fresh daily from our Ring Road bakery</div>
+      <div class="trust-item"><span class="icon">🕚</span> Opens 11:30 AM</div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-eyebrow">What we bake</div>
+      <h2>A little something for every craving</h2>
+      <p>From birthday showstoppers to teatime cookies — order on call and we'll walk you through today's freshest picks.</p>
+    </div>
+    <div class="cat-grid">
+      <a class="cat-card" href="#bakes/celebration" data-nav>
+        <div class="cat-illustration"><div class="cake-illust"></div></div>
+        <h3>Celebration Cakes</h3>
+        <p>Custom designs for the moments that matter.</p>
+      </a>
+      <a class="cat-card" href="#bakes/pastries" data-nav>
+        <div class="cat-illustration"><div class="pastry-illust"></div></div>
+        <h3>Pastries & Desserts</h3>
+        <p>Everyday indulgence, freshly baked.</p>
+      </a>
+      <a class="cat-card" href="#bakes/cookies" data-nav>
+        <div class="cat-illustration"><div class="cookie-illust"></div></div>
+        <h3>Cookies & Dry Cakes</h3>
+        <p>Teatime classics that travel well.</p>
+      </a>
+      <a class="cat-card" href="#bakes/bulk" data-nav>
+        <div class="cat-illustration"><div class="box-illust"></div></div>
+        <h3>Occasion & Bulk</h3>
+        <p>Parties, offices & events — planned on call.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="block" style="background: linear-gradient(180deg, transparent, var(--cream-warm) 40%, var(--cream-warm) 60%, transparent);">
+    <div class="section-head">
+      <div class="section-eyebrow">Ordering is easy</div>
+      <h2>Three quick steps</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Call or WhatsApp</h3>
+        <p>Reach us at +91 98712 99037 — we'll pick up.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Share the brief</h3>
+        <p>Occasion, size, flavour direction — we'll take it from there.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Pick up or ask about delivery</h3>
+        <p>Come by Ring Road, or ask about delivery when you call.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="teaser-wrap">
+    <div class="teaser-visit">
+      <h2>Come say hi at Ring Road</h2>
+      <p>187H/7, Ring Rd, opp. Maharani Bagh · Opens 11:30 AM</p>
+      <div class="cta-group" style="justify-content: center;">
+        <a href="https://maps.google.com/?cid=6711316215848366905" target="_blank" rel="noopener noreferrer" class="btn btn-outline">📍 Get Directions</a>
+        <a href="#contact" class="btn" style="background: rgba(255,255,255,0.15); color: white; box-shadow: none; border: 2px solid rgba(255,255,255,0.4);" data-nav>See all contact info →</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ OUR BAKES ============ -->
+<div class="page" id="page-bakes">
+  <section class="block">
+    <div class="section-head">
+      <div class="section-eyebrow">The menu</div>
+      <h2>Our Bakes</h2>
+    </div>
+    <p class="bakes-intro">"Everything made to order or baked fresh — flavours and same-day availability on call."</p>
+
+    <div class="category-block" id="cat-celebration">
+      <div class="cat-illust-large"><div class="cake-illust" style="width:130px;height:130px;"></div></div>
+      <div>
+        <h3>Celebration Cakes</h3>
+        <p>Custom cakes for birthdays, anniversaries and milestones — designed around your brief. Share the occasion, the size, the flavour direction, and we'll bring it to life at the counter.</p>
+      </div>
+      <div class="cat-actions">
+        <a href="tel:+919871299037" class="btn btn-primary">📞 Order on Call</a>
+        <a href="https://wa.me/919871299037" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">💬 WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="category-block" id="cat-pastries">
+      <div class="cat-illust-large"><div class="pastry-illust" style="width:140px;height:130px;"></div></div>
+      <div>
+        <h3>Pastries & Desserts</h3>
+        <p>Everyday indulgence, baked fresh through the day. Call ahead to hear what's coming out of the oven — the picks change with what's freshest.</p>
+      </div>
+      <div class="cat-actions">
+        <a href="tel:+919871299037" class="btn btn-primary">📞 Order on Call</a>
+        <a href="https://wa.me/919871299037" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">💬 WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="category-block" id="cat-cookies">
+      <div class="cat-illust-large"><div class="cookie-illust" style="width:130px;height:130px;"></div></div>
+      <div>
+        <h3>Cookies & Dry Cakes</h3>
+        <p>Teatime classics that travel well — perfect for gifting, home stashes, or that mid-afternoon chai moment. Ask about assortment options when you order.</p>
+      </div>
+      <div class="cat-actions">
+        <a href="tel:+919871299037" class="btn btn-primary">📞 Order on Call</a>
+        <a href="https://wa.me/919871299037" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">💬 WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="category-block" id="cat-bulk">
+      <div class="cat-illust-large"><div class="box-illust" style="width:140px;height:130px;"></div></div>
+      <div>
+        <h3>Occasion & Bulk Orders</h3>
+        <p>Parties, offices and events — planned on call. T<script>setTimeout(function(){try{document.querySelectorAll("[class*=preload],[id*=preload],[class*=loader],[id*=loader]").forEach(function(e){e.style.display="none"});document.body.style.opacity="1";document.body.style.visibility="visible";}catch(e){}},7000);</script>

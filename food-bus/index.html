@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Bus Of India — Hop on. Eat happy.</title>
+<style>
+  :root{
+    --red:#E63027;
+    --red-dark:#B8231C;
+    --yellow:#FFC93C;
+    --cream:#FFF4D6;
+    --charcoal:#1F1A17;
+    --ink:#2B241F;
+    --paper:#FBF5E6;
+    --line:#2B241F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:'Helvetica Neue',Arial,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:'Archivo Black','Impact',sans-serif;letter-spacing:-.01em;line-height:.95;text-transform:uppercase}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%}
+
+  /* ===== PRELOADER ===== */
+  #preloader{position:fixed;inset:0;background:var(--red);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .6s ease, visibility .6s ease}
+  #preloader.done{opacity:0;visibility:hidden}
+  .stamp{border:6px solid var(--cream);padding:22px 34px;transform:rotate(-6deg);position:relative;text-align:center}
+  .stamp:before,.stamp:after{content:"";position:absolute;left:8px;right:8px;height:3px;background:var(--cream)}
+  .stamp:before{top:6px}.stamp:after{bottom:6px}
+  .stamp h1{color:var(--cream);font-size:clamp(28px,6vw,52px)}
+  .stamp .sub{color:var(--yellow);font-family:'Courier New',monospace;font-weight:bold;letter-spacing:.3em;margin-top:8px;font-size:11px}
+  .route-fill{margin-top:14px;height:6px;width:220px;background:rgba(255,244,214,.25);border-radius:3px;overflow:hidden;margin-left:auto;margin-right:auto}
+  .route-fill span{display:block;height:100%;width:0;background:var(--yellow);border-radius:3px;animation:fill 2.2s ease forwards}
+  @keyframes fill{to{width:100%}}
+
+  /* ===== HEADER ===== */
+  header.site{position:sticky;top:0;z-index:100;background:var(--red);border-bottom:4px solid var(--charcoal);color:var(--cream)}
+  .header-inner{max-width:1400px;margin:0 auto;padding:14px 5%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .brand{display:flex;align-items:center;gap:12px;cursor:pointer}
+  .brand-mark{width:44px;height:44px;background:var(--yellow);border:3px solid var(--charcoal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;color:var(--charcoal);font-size:20px;transform:rotate(-3deg)}
+  .brand-name{font-family:'Archivo Black',sans-serif;font-size:18px;line-height:1;letter-spacing:.02em}
+  .brand-name small{display:block;font-family:'Courier New',monospace;font-size:9px;font-weight:bold;letter-spacing:.3em;color:var(--yellow);margin-top:4px}
+  nav.top{display:flex;gap:26px}
+  nav.top a{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.05em;position:relative;padding:6px 0;transition:color .2s}
+  nav.top a:hover{color:var(--yellow)}
+  nav.top a.active:after{content:"";position:absolute;bottom:-2px;left:0;right:0;height:3px;background:var(--yellow)}
+  .hamburger{background:var(--charcoal);color:var(--cream);border:none;width:44px;height:44px;border-radius:8px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;padding:10px}
+  .hamburger span{display:block;width:20px;height:2.5px;background:var(--yellow)}
+  @media(max-width:840px){nav.top{display:none}}
+
+  /* ===== SIDEBAR ===== */
+  #sidebar{position:fixed;top:0;right:-420px;width:min(380px,90vw);height:100vh;background:var(--cream);z-index:200;transition:right .5s cubic-bezier(.7,.05,.25,1);box-shadow:-20px 0 60px rgba(0,0,0,.3);display:flex;flex-direction:column}
+  #sidebar.open{right:0}
+  .sb-head{background:var(--red);color:var(--cream);padding:24px;border-bottom:4px solid var(--charcoal);display:flex;justify-content:space-between;align-items:center}
+  .sb-head h3{font-size:20px}
+  .sb-close{background:var(--yellow);border:2px solid var(--charcoal);color:var(--charcoal);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;font-weight:bold}
+  .sb-body{padding:20px;flex:1;overflow-y:auto}
+  .sb-item{display:block;padding:18px 20px;margin-bottom:12px;background:#fff;border:2.5px solid var(--charcoal);border-radius:12px;cursor:pointer;transition:all .2s;position:relative}
+  .sb-item:hover{background:var(--yellow);transform:translateX(6px)}
+  .sb-item .num{font-family:'Courier New',monospace;color:var(--red);font-weight:bold;font-size:11px;letter-spacing:.2em}
+  .sb-item .lbl{font-family:'Archivo Black',sans-serif;font-size:15px;margin-top:4px}
+  .sb-item .desc{font-size:12px;color:#666;margin-top:4px}
+  #overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150;opacity:0;visibility:hidden;transition:.3s}
+  #overlay.on{opacity:1;visibility:visible}
+
+  /* ===== PAGE STRUCTURE ===== */
+  .page{display:none;animation:punchIn .5s cubic-bezier(.2,.8,.2,1)}
+  .page.active{display:block}
+  @keyframes punchIn{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:none}}
+
+  /* ===== HOME HERO ===== */
+  .hero{position:relative;min-height:92vh;background:linear-gradient(180deg,var(--yellow) 0%, #FFD966 100%);overflow:hidden;border-bottom:4px solid var(--charcoal)}
+  .bunting{position:absolute;top:0;left:0;right:0;height:40px;background-image:repeating-linear-gradient(90deg,var(--red) 0 30px, var(--cream) 30px 60px, var(--charcoal) 60px 90px);clip-path:polygon(0 0,100% 0,100% 40%,95% 100%,90% 40%,85% 100%,80% 40%,75% 100%,70% 40%,65% 100%,60% 40%,55% 100%,50% 40%,45% 100%,40% 40%,35% 100%,30% 40%,25% 100%,20% 40%,15% 100%,10% 40%,5% 100%,0 40%)}
+  .hero-inner{position:relative;z-index:5;max-width:1400px;margin:0 auto;padding:100px 5% 60px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+  @media(max-width:900px){.hero-inner{grid-template-columns:1fr;padding-top:80px}}
+  .kicker{display:inline-block;background:var(--charcoal);color:var(--yellow);padding:8px 16px;font-family:'Courier New',monospace;font-weight:bold;font-size:12px;letter-spacing:.3em;border-radius:2px;margin-bottom:20px}
+  .hero h1{font-size:clamp(48px,9vw,120px);color:var(--charcoal)}
+  .hero h1 .stroke{-webkit-text-stroke:3px var(--charcoal);color:transparent}
+  .hero .tagline{font-size:clamp(22px,3.5vw,36px);font-family:'Archivo Black',sans-serif;color:var(--red);margin-top:14px;font-style:italic}
+  .rating-row{display:flex;align-items:center;gap:16px;margin-top:28px;flex-wrap:wrap}
+  .stars{background:var(--charcoal);color:var(--yellow);padding:10px 16px;border-radius:8px;font-family:'Archivo Black',sans-serif;font-size:18px}
+  .rating-txt{font-weight:bold;font-size:14px}
+  .cta-row{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:16px 26px;font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;border:3px solid var(--charcoal);border-radius:10px;cursor:pointer;transition:all .2s;letter-spacing:.02em}
+  .btn-primary{background:var(--red);color:var(--cream);box-shadow:5px 5px 0 var(--charcoal)}
+  .btn-primary:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--charcoal)}
+  .btn-ghost{background:var(--cream);color:var(--charcoal);box-shadow:5px 5px 0 var(--charcoal)}
+  .btn-ghost:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--charcoal);background:#fff}
+  #bus-canvas{width:100%;height:min(500px,70vw);background:transparent}
+
+  /* ===== ROUTE LINE ===== */
+  .route-svg{position:absolute;left:50%;top:0;transform:translateX(-50%);pointer-events:none;z-index:1;overflow:visible}
+  .route-svg path{fill:none;stroke:var(--red);stroke-width:5;stroke-dasharray:14 10;stroke-linecap:round}
+
+  /* ===== SECTIONS ===== */
+  section.stop{position:relative;padding:100px 5%;max-width:1400px;margin:0 auto}
+  .stop-label{display:inline-flex;align-items:center;gap:12px;background:var(--charcoal);color:var(--yellow);padding:10px 20px;font-family:'Courier New',monospace;font-weight:bold;font-size:12px;letter-spacing:.3em;border-radius:3px;margin-bottom:24px}
+  .stop-label .dot{width:10px;height:10px;background:var(--red);border-radius:50%}
+  .stop h2{font-size:clamp(36px,6vw,72px);color:var(--charcoal);margin-bottom:24px}
+  .stop h2 .accent{color:var(--red)}
+  .stop p.lede{font-size:clamp(18px,2vw,22px);line-height:1.5;max-width:750px;color:#3a2f28}
+
+  /* Numbers / departure board */
+  .board{background:var(--charcoal);border-radius:20px;padding:50px;margin-top:40px;color:var(--cream);border:5px solid var(--yellow);box-shadow:10px 10px 0 var(--red)}
+  .board-title{font-family:'Courier New',monospace;font-weight:bold;letter-spacing:.4em;color:var(--yellow);font-size:12px;margin-bottom:30px;text-align:center}
+  .board-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+  @media(max-width:800px){.board-grid{grid-template-columns:repeat(2,1fr);gap:24px}.board{padding:30px}}
+  .stat{text-align:center}
+  .stat .num{font-family:'Archivo Black',sans-serif;font-size:clamp(40px,6vw,64px);color:var(--yellow);line-height:1}
+  .stat .lbl{font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-top:8px;color:var(--cream);opacity:.85}
+
+  /* Bus cards */
+  .bus-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:40px}
+  @media(max-width:900px){.bus-grid{grid-template-columns:1fr}}
+  .ticket{background:var(--cream);border:3px solid var(--charcoal);border-radius:16px;padding:0;overflow:hidden;position:relative;box-shadow:8px 8px 0 var(--red);transition:transform .25s}
+  .ticket:hover{transform:translate(-3px,-3px)}
+  .ticket:before,.ticket:after{content:"";position:absolute;width:26px;height:26px;background:var(--paper);border:3px solid var(--charcoal);border-radius:50%;top:calc(50% - 13px)}
+  .ticket:before{left:-16px}
+  .ticket:after{right:-16px}
+  .ticket-head{background:var(--red);color:var(--cream);padding:18px 24px;border-bottom:3px dashed var(--charcoal);display:flex;justify-content:space-between;align-items:center}
+  .ticket-head .rt{font-family:'Courier New',monospace;font-weight:bold;font-size:11px;letter-spacing:.25em}
+  .ticket-head .no{font-family:'Archivo Black',sans-serif;background:var(--yellow);color:var(--charcoal);padding:4px 10px;border-radius:4px;font-size:13px}
+  .ticket-body{padding:26px 24px}
+  .ticket-body h3{font-size:26px;margin-bottom:10px}
+  .ticket-body .addr{font-size:13px;line-height:1.5;color:#4a3d33;margin-bottom:14px}
+  .ticket-body .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{background:#fff;border:2px solid var(--charcoal);padding:5px 10px;border-radius:20px;font-size:11px;font-weight:bold}
+  .chip.rating{background:var(--yellow)}
+  .ticket-actions{display:flex;flex-direction:column;gap:8px}
+  .ticket-actions a{display:block;padding:12px;text-align:center;font-family:'Archivo Black',sans-serif;font-size:12px;border-radius:8px;border:2px solid var(--charcoal);text-transform:uppercase}
+  .ticket-actions .call{background:var(--charcoal);color:var(--yellow)}
+  .ticket-actions .dir{background:var(--cream)}
+
+  /* Order strip */
+  .strip{background:var(--red);color:var(--cream);padding:60px 5%;text-align:center;border-top:4px solid var(--charcoal);border-bottom:4px solid var(--charcoal);position:relative;overflow:hidden}
+  .strip h3{font-size:clamp(30px,5vw,52px)}
+  .strip .stroke{-webkit-text-stroke:2px var(--cream);color:transparent}
+  .strip p{margin:16px 0 28px;font-size:18px}
+
+  /* Menu categories */
+  .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;margin-top:40px}
+  @media(max-width:800px){.cat-grid{grid-template-columns:1fr}}
+  .cat{background:#fff;border:3px solid var(--charcoal);border-radius:16px;overflow:hidden;position:relative;box-shadow:8px 8px 0 var(--yellow);scroll-margin-top:120px}
+  .cat:nth-child(2){box-shadow:8px 8px 0 var(--red)}
+  .cat:nth-child(3){box-shadow:8px 8px 0 var(--charcoal)}
+  .cat:nth-child(4){box-shadow:8px 8px 0 var(--yellow)}
+  .cat-head{background:var(--charcoal);color:var(--cream);padding:24px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px dashed var(--yellow)}
+  .cat-head .no{font-family:'Courier New',monospace;color:var(--yellow);letter-spacing:.2em;font-size:12px;font-weight:bold}
+  .cat-head h3{font-size:22px;color:var(--cream)}
+  .cat-body{padding:28px 24px}
+  .cat-body p{font-size:15px;line-height:1.55;color:#3a2f28;margin-bottom:20px}
+
+  /* About */
+  .value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+  @media(max-width:800px){.value-grid{grid-template-columns:1fr}}
+  .value{background:var(--cream);border:3px solid var(--charcoal);border-radius:14px;padding:32px 24px;text-align:center;box-shadow:6px 6px 0 var(--red)}
+  .value .icon{width:60px;height:60px;background:var(--yellow);border:3px solid var(--charcoal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
+  .value h4{font-size:22px;margin-bottom:8px}
+  .value p{font-size:14px;line-height:1.5;color:#4a3d33}
+
+  /* Contact */
+  .contact-card{background:var(--charcoal);color:var(--cream);border-radius:20px;padding:50px;margin-top:40px;text-align:center;border:5px solid var(--yellow)}
+  .contact-card .big{font-family:'Archivo Black',sans-serif;font-size:clamp(30px,5vw,52px);color:var(--yellow);margin:20px 0;display:inline-block;border-bottom:4px solid var(--red);padding-bottom:6px}
+  .contact-card p{font-size:16px;line-height:1.6;max-width:560px;margin:0 auto}
+
+  /* Legal */
+  .legal{background:#fff;border:2px solid var(--charcoal);border-radius:14px;padding:40px;margin-top:30px}
+  .legal ol,.legal p{font-size:15px;line-height:1.7;color:#3a2f28}
+  .legal ol{padding-left:22px}
+  .legal li{margin-bottom:14px}
+
+  /* Footer */
+  footer{background:var(--charcoal);color:var(--cream);padding:60px 5% 24px;border-top:6px solid var(--red);position:relative}
+  footer:before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:repeating-linear-gradient(90deg,var(--red) 0 40px, var(--yellow) 40px 80px, var(--cream) 80px 120px)}
+  .foot-grid{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:40px}
+  @media(max-width:800px){.foot-grid{grid-template-columns:1fr;gap:30px}}
+  footer h4{font-size:16px;color:var(--yellow);margin-bottom:18px;letter-spacing:.05em}
+  footer p, footer a{font-size:13px;line-height:1.8;color:var(--cream);opacity:.9}
+  footer a:hover{color:var(--yellow);opacity:1}
+  .foot-links a{display:block}
+  .foot-outlets div{margin-bottom:8px;padding-left:14px;position:relative}
+  .foot-outlets div:before{content:"■";position:absolute;left:0;color:var(--red)}
+  .built{max-width:1400px;margin:36px auto 0;padding-top:20px;border-top:1px solid rgba(255,244,214,.15);text-align:center;font-size:12px;letter-spacing:.15em;font-family:'Courier New',monospace}
+  .built a{color:var(--yellow);font-weight:bold}
+
+  /* Sticky call */
+  .sticky-call{position:fixed;bottom:20px;right:20px;z-index:90;background:var(--red);color:var(--cream);border:3px solid var(--charcoal);border-radius:50px;padding:14px 22px;font-family:'Archivo Black',sans-serif;font-size:14px;box-shadow:5px 5px 0 var(--charcoal);display:flex;align-items:center;gap:10px;text-transform:uppercase}
+  .sticky-call:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--charcoal)}
+  .sticky-call .dot-pulse{width:10px;height:10px;background:var(--yellow);border-radius:50%;animation:pulse 1.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.4}}
+  @media(max-width:600px){.sticky-call span.txt{display:none}}
+
+  /* Page header block */
+  .page-header{background:var(--red);color:var(--cream);padding:80px 5% 60px;text-align:center;border-bottom:4px solid var(--charcoal);position:relative;overflow:hidden}
+  .page-header:after{content:"";position:absolute;bottom:-30px;left:0;right:0;height:60px;background:var(--paper);clip-path:polygon(0 60%,10% 30%,20% 60%,30% 30%,40% 60%,50% 30%,60% 60%,70% 30%,80% 60%,90% 30%,100% 60%,100% 100%,0 100%)}
+  .page-header .kicker{background:var(--cream);color:var(--red)}
+  .page-header h1{font-size:clamp(40px,8vw,88px);color:var(--cream)}
+  .page-header p{margin-top:16px;font-size:18px;max-width:600px;margin-left:auto;margin-right:auto}
+
+  @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160/build/three.min.js"></script>
+<style>
+.ha-img-placeholder{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:#f4f4f5;border:1px dashed #d4d4d8;border-radius:8px;color:#71717a;font-size:12px;font-family:system-ui,sans-serif;min-height:80px;padding:16px;box-sizing:border-box;animation:ha-img-pulse 1.5s ease-in-out infinite}
+.ha-img-placeholder.ha-failed{animation:none;opacity:.7}
+@keyframes ha-img-pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@media(prefers-color-scheme:dark){.ha-img-placeholder{background:#27272a;border-color:#3f3f46;color:#a1a1aa}}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="stamp">
+    <h1>Food Bus<br>Of India</h1>
+    <div class="sub">Route · 001 · Delhi</div>
+    <div class="route-fill"><span></span></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="site">
+  <div class="header-inner">
+    <div class="brand" onclick="goTo('home')">
+      <div class="brand-mark">FB</div>
+      <div class="brand-name">Food Bus<br><small>Of India</small></div>
+    </div>
+    <nav class="top">
+      <a href="#home" data-nav="home" class="active">Home</a>
+      <a href="#menu" data-nav="menu">Menu</a>
+      <a href="#outlets" data-nav="outlets">Our Buses</a>
+      <a href="#about" data-nav="about">About</a>
+      <a href="#contact" data-nav="contact">Contact</a>
+    </nav>
+    <button class="hamburger" onclick="openSidebar()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<div id="overlay" onclick="closeSidebar()"></div>
+<aside id="sidebar" aria-label="Menu categories">
+  <div class="sb-head">
+    <h3>Menu Categories</h3>
+    <button class="sb-close" onclick="closeSidebar()" aria-label="Close">×</button>
+  </div>
+  <div class="sb-body">
+    <div class="sb-item" onclick="gotoCat('street')">
+      <div class="num">CAT · 01</div>
+      <div class="lbl">Street Food Classics</div>
+      <div class="desc">Chaat and more — India's favourites</div>
+    </div>
+    <div class="sb-item" onclick="gotoCat('mains')">
+      <div class="num">CAT · 02</div>
+      <div class="lbl">Indian Mains</div>
+      <div class="desc">Hearty plates and thalis</div>
+    </div>
+    <div class="sb-item" onclick="gotoCat('chinese')">
+      <div class="num">CAT · 03</div>
+      <div class="lbl">Chinese Favourites</div>
+      <div class="desc">Desi-Chinese comfort classics</div>
+    </div>
+    <div class="sb-item" onclick="gotoCat('quick')">
+      <div class="num">CAT · 04</div>
+      <div class="lbl">Quick Bites & Desserts</div>
+      <div class="desc">Snacks, sides and something sweet</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ========== PAGE: HOME ========== -->
+<main id="page-home" class="page active">
+  <section class="hero">
+    <div class="bunting"></div>
+    <div class="hero-inner">
+      <div>
+        <div class="kicker">★ Metro-Gate Dining · Delhi</div>
+        <h1><span class="stroke">Food Bus</span><br>Of India</h1>
+        <div class="tagline">Hop on. Eat happy.</div>
+        <div class="rating-row">
+          <div class="stars">★ 4.6</div>
+          <div class="rating-txt">5,382+ Google reviews<br><span style="opacity:.7;font-weight:normal">at our Lajpat Nagar bus</span></div>
+        </div>
+        <div class="cta-row">
+          <a href="tel:+919899590373" class="btn btn-primary">📞 Call to Order · +91 98995 90373</a>
+          <a href="#menu" class="btn btn-ghost" onclick="goTo('menu');return false;">See the Menu →</a>
+        </div>
+      </div>
+      <div>
+        <canvas id="bus-canvas"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Route SVG line down home -->
+  <div style="position:relative">
+    <svg class="route-svg" width="120" height="2200" viewBox="0 0 120 2200" preserveAspectRatio="none" aria-hidden="true">
+      <path id="routePath" d="M60,0 C60,200 20,300 60,500 C100,700 20,800 60,1000 C100,1200 20,1350 60,1550 C100,1750 60,1900 60,2200"/>
+    </svg>
+
+    <section class="stop">
+      <div class="stop-label"><span class="dot"></span>Stop 01 · The Idea</div>
+      <h2>A restaurant with the <span class="accent">soul of a road trip.</span></h2>
+      <p class="lede">India's street-food favourites, served with bus-window seating fun. It's not just food — it's a joyride at your metro gate. Real buses. Real flavour. Real Delhi.</p>
+    </section>
+
+    <section class="stop">
+      <div class="stop-label"><span class="dot"></span>Stop 02 · The Numbers</div>
+      <h2>Passenger <span class="accent">favourites.</span></h2>
+      <div class="board">
+        <div class="board-title">◆ Departure Board · Live Stats ◆</div>
+        <div class="board-grid">
+          <div class="stat"><div class="num" data-count="4.6" data-dec="1">0.0</div><div class="lbl">★ Rating</div></div>
+          <div class="stat"><div class="num" data-count="5382">0</div><div class="lbl">Reviews · Lajpat Nagar</div></div>
+          <div class="stat"><div class="num" data-count="3">0</div><div class="lbl">Buses across Delhi</div></div>
+          <div class="stat"><div class="num">10AM</div><div class="lbl">Doors Open Daily</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stop">
+      <div class="stop-label"><span class="dot"></span>Stop 03 · Our Buses</div>
+      <h2>Three buses. <span class="accent">One good time.</span></h2>
+      <p class="lede">Find us parked at Delhi metro gates — hop on any time after 10 AM.</p>
+      <div class="bus-grid">
+        <div class="ticket">
+          <div class="ticket-head"><span class="rt">Route · LN-05</span><span class="no">BUS 01</span></div>
+          <div class="ticket-body">
+            <h3>Lajpat Nagar</h3>
+            <div class="addr">Gate No. 5, Lajpat Nagar Metro Station</div>
+            <div class="meta"><span class="chip rating">★ 4.6</span><span class="chip">5,382+ reviews</span></div>
+          </div>
+        </div>
+        <div class="ticket">
+          <div class="ticket-head"><span class="rt">Route · RN-02</span><span class="no">BUS 02</span></div>
+          <div class="ticket-body">
+            <h3>Rajinder Nagar</h3>
+            <div class="addr">Gate No. 2, Rajinder Nagar Metro</div>
+            <div class="meta"><span class="chip rating">★ 4.6</span><span class="chip">4,405+ reviews</span></div>
+          </div>
+        </div>
+        <div class="ticket">
+          <div class="ticket-head"><span class="rt">Route · SX-04</span><span class="no">BUS 03</span></div>
+          <div class="ticket-body">
+            <h3>South Extension</h3>
+            <div class="addr">Gate No. 4, South Extension Metro</div>
+            <div class="meta"><span class="chip rating">★ 4.5</span><span class="chip">620+ reviews</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:30px"><a href="#outlets" class="btn btn-ghost" onclick="goTo('outlets');return false;">See all buses →</a></div>
+    </section>
+  </div>
+
+  <div class="strip">
+    <h3><span class="stroke">Hungry?</span> Order Now.</h3>
+    <p>Call ahead for party orders. We'll have it ready when you arrive.</p>
+    <a href="tel:+919899590373" class="btn btn-ghost">📞 +91 98995 90373</a>
+  </div>
+</main>
+
+<!-- ========== PAGE: MENU ========== -->
+<main id="page-menu" class="page">
+  <div class="page-header">
+    <div class="kicker">Menu · Route 001</div>
+    <h1>The Full Menu</h1>
+    <p>Full menu at the counter — call ahead for party orders.</p>
+  </div>
+  <section class="stop">
+    <div class="cat-grid">
+      <div class="cat" id="cat-street">
+        <div class="cat-head"><div><div class="no">CAT · 01</div><h3>Street Food Classics</h3></div></div>
+        <div class="cat-body">
+          <p>The chaat-and-more favourites India lines up for. Tangy, spicy, crunchy — served the way street food was meant to be: bold, fresh and full of soul.</p>
+          <a href="tel:+919899590373" class="btn btn-primary" style="font-size:13px;padding:12px 18px">📞 Call to Order</a>
+        </div>
+      </div>
+      <div class="cat" id="cat-mains">
+        <div class="cat-head"><div><div class="no">CAT · 02</div><h3>Indian Mains</h3></div></div>
+        <div class="cat-body">
+          <p>Hearty plates and thalis done right. Everything you'd want from a proper Indian meal — generous, comforting, and made to keep you coming back.</p>
+          <a href="tel:+919899590373" class="btn btn-primary" style="font-size:13px;padding:12px 18px">📞 Call to Order</a>
+        </div>
+      </div>
+      <div class="cat" id="cat-chinese">
+        <div class="cat-head"><div><div class="no">CAT · 03</div><h3>Chinese Favourites</h3></div></div>
+        <div class="cat-body">
+          <p>Desi-Chinese comfort classics. The saucy, smoky, wok-fired plates every Delhi table knows by heart.</p>
+          <a href="tel:+919899590373" class="btn btn-primary" style="font-size:13px;padding:12px 18px">📞 Call to Order</a>
+        </div>
+      </div>
+      <div class="cat" id="cat-quick">
+        <div class="cat-head"><div><div class="no">CAT · 04</div><h3>Quick Bites & Desserts</h3></div></div>
+        <div class="cat-body">
+          <p>Snacks, sides and something sweet. For the short trip, the mid-day pit-stop, or the sweet ending to a happy meal.</p>
+          <a href="tel:+919899590373" class="btn btn-primary" style="font-size:13px;padding:12px 18px">📞 Call to Order</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========== PAGE: OUTLETS ========== -->
+<main id="page-outlets" class="page">
+  <div class="page-header">
+    <div class="kicker">Our Buses · 3 Stops</div>
+    <h1>Our Buses</h1>
+    <p>All buses open from 10 AM.</p>
+  </div>
+  <section class="stop">
+    <div class="bus-grid">
+      <div class="ticket">
+        <div class="ticket-head"><span class="rt">Route · LN-05</span><span class="no">BUS 01</span></div>
+        <div class="ticket-body">
+          <h3>Lajpat Nagar</h3>
+          <div class="addr">Gate No. 5, Lajpat Nagar Metro Station,<br>Block C, Lajpat Nagar III, New Delhi 110024</div>
+          <div class="meta"><span class="chip rating">★ 4.6</span><span class="chip">5,382+ reviews</span><span class="chip">Opens 10 AM</span></div>
+          <div class="ticket-actions">
+            <a href="tel:+919899590373" class="call">📞 +91 98995 90373</a>
+            <a href="https://maps.google.com/?cid=15588842310538675419" target="_blank" rel="noopener noreferrer" class="dir">📍 Get Directions</a>
+          </div>
+        </div>
+      </div>
+      <div class="ticket">
+        <div class="ticket-head"><span class="rt">Route · RN-02</span><span class="no">BUS 02</span></div>
+        <div class="ticket-body">
+          <h3>Rajinder Nagar</h3>
+          <div class="addr">Gate No. 2, Rajinder Nagar Metro,<br>New Delhi 110060</div>
+          <div class="meta"><span class="chip rating">★ 4.6</span><span class="chip">4,405+ reviews</span><span class="chip">Opens 10 AM</span></div>
+          <div class="ticket-actions">
+            <a href="tel:+919899590373" class="call">📞 Call the Bus</a>
+          </div>
+        </div>
+      </div>
+      <div class="ticket">
+        <div class="ticket-head"><span class="rt">Route · SX-04</span><span class="no">BUS 03</span></div>
+        <div class="ticket-body">
+          <h3>South Extension</h3>
+          <div class="addr">Gate No. 4, South Extension Metro,<br>New Delhi 110049</div>
+          <div class="meta"><span class="chip rating">★ 4.5</span><span class="chip">620+ reviews</span><span class="chip">Opens 10 AM</span></div>
+          <div class="ticket-actions">
+            <a href="tel:+919899590373" class="call">📞 Call the Bus</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========== PAGE: ABOUT ========== -->
+<main id="page-about" class="page">
+  <div class="page-header">
+    <div class="kicker">About · Route 001</div>
+    <h1>About Us</h1>
+    <p>The story of a bus, a metro gate, and a whole lot of street-food love.</p>
+  </div>
+  <section class="stop">
+    <h2>Street-food favourites, <span class="accent">with a twist.</span></h2>
+    <p class="lede" style="margin-top:20px">Food Bus Of India serves India's street-food favourites with a twist — bus-themed dining at Delhi metro stations. Three buses and counting: Lajpat Nagar, Rajinder Nagar and South Extension, with <strong>10,000+ combined Google reviews</strong>.</p>
+    <p class="lede" style="margin-top:20px">Founding partner: <strong>Surjit Singh</strong>.</p>
+
+    <div class="value-grid">
+      <div class="value">
+        <div class="icon">🎡</div>
+        <h4>Fun</h4>
+        <p>Dining that feels like a trip. Bus-window seating, ticket-style vibes.</p>
+      </div>
+      <div class="value">
+        <div class="icon">🌶️</div>
+        <h4>Flavour</h4>
+        <p>Real street-food soul. India's favourites, done right, every time.</p>
+      </div>
+      <div class="value">
+        <div class="icon">🚏</div>
+        <h4>Everywhere</h4>
+        <p>Right at your metro gate. Hop on, eat happy, hop off.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========== PAGE: CONTACT ========== -->
+<main id="page-contact" class="page">
+  <div class="page-header">
+    <div class="kicker">Contact · Direct Line</div>
+    <h1>Contact</h1>
+    <p>One number. One call. Order in seconds.</p>
+  </div>
+  <section class="stop">
+    <div class="contact-card">
+      <div style="font-family:'Courier New',monospace;font-weight:bold;letter-spacing:.3em;color:var(--yellow);font-size:12px">◆ PRIMARY LINE · LAJPAT NAGAR BUS ◆</div>
+      <a href="tel:+919899590373" class="big">📞 +91 98995 90373</a>
+      <p>Gate No. 5, Lajpat Nagar Metro Station, New Delhi 110024<br>Opens 10 AM</p>
+      <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="tel:+919899590373" class="btn btn-primary">Call Now</a>
+        <a href="https://maps.google.com/?cid=15588842310538675419" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">📍 Get Directions</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <p style="font-size:16px;color:#4a3d33">Other buses at Rajinder Nagar & South Extension — <a href="#outlets" onclick="goTo('outlets');return false;" style="color:var(--red);font-weight:bold;text-decoration:underline">see all buses →</a></p>
+    </div>
+  </section>
+</main>
+
+<!-- ========== PAGE: TERMS ========== -->
+<main id="page-terms" class="page">
+  <div class="page-header">
+    <div class="kicker">Legal</div>
+    <h1>Terms & Conditions</h1>
+  </div>
+  <section class="stop">
+    <div class="legal">
+      <ol>
+        <li>This is an informational website. We do not accept online payments or orders — all orders and party bookings are placed on call or at the counter.</li>
+        <li>Menu, prices and availability vary by outlet and are confirmed at the outlet.</li>
+        <li>Renders and illustrations on this site are stylized representations and may not reflect exact serving presentation.</li>
+        <li>All content © Food Bus Of India. All rights reserved.</li>
+        <li>These terms are governed by the laws of India. Jurisdiction: New Delhi.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<!-- ========== PAGE: PRIVACY ========== -->
+<main id="page-privacy" class="page">
+  <div class="page-header">
+    <div class="kicker">Legal</div>
+    <h1>Privacy Policy</h1>
+  </div>
+  <section class="stop">
+    <div class="legal">
+      <p>This website does not collect, store or process personal data — there are no forms, no tracking cookies, and no identifying analytics.</p>
+      <p style="margin-top:16px">Calls placed through the website go directly to the respective outlet's phone line.</p>
+      <p style="margin-top:16px">Third-party links (such as Google Maps) are governed by their own privacy policies.</p>
+      <p style="margin-top:16px"><strong>Questions?</strong> Call us on <a href="tel:+919899590373" style="color:var(--red);font-weight:bold;text-decoration:underline">+91 98995 90373</a>.</p>
+    </div>
+  </section>
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="foot-grid">
+    <div>
+      <h4>Food Bus Of India</h4>
+      <p>India's street-food favourites, served bus-style at Delhi metro gates. Hop on. Eat happy.</p>
+      <p style="margin-top:12px"><strong style="color:var(--yellow)">📞 +91 98995 90373</strong><br>Opens 10 AM daily</p>
+    </div>
+    <div class="foot-links">
+      <h4>Quick Links</h4>
+      <a href="#about" onclick="goTo('about');return false;">About Us</a>
+      <a href="#contact" onclick="goTo('contact');return false;">Contact</a>
+      <a href="#terms" onclick="goTo('terms');return false;">Terms & Conditions</a>
+      <a href="#privacy" onclick="goTo('privacy');return false;">Privacy Policy</a>
+    </div>
+    <div class="foot-outlets">
+      <h4>Our Buses</h4>
+      <div>Lajpat Nagar · Gate 5, LN Metro</div>
+      <div>Rajinder Nagar · Gate 2</div>
+      <div>South Extension · Gate 4</div>
+    </div>
+  </div>
+  <div class="built">Built by <a href="https://hackknow.com" target="_blank" rel="noopener noreferrer">Hackknow.com</a></div>
+</footer>
+
+<!-- STICKY CALL -->
+<a href="tel:+919899590373" class="sticky-call"><span class="dot-pulse"></span>📞 <span class="txt">Call to Order</span></a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ===== PRELOADER =====
+window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('preloader').classList.add('done'),2200)});
+
+// ===== ROUTER =====
+const pages = ['home','menu','outlets','about','contact','terms','privacy'];
+function goTo(id, catId){
+  if(!pages.includes(id)) id='home';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const target = document.getElementById('page-'+id);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('nav.top a').forEach(a=>a.classList.toggle('active',a.dataset.nav===id));
+  history.replaceState(null,'','#'+id);
+  window.scrollTo({top:0,behavior:'instant'});
+  closeSidebar();
+  if(id==='menu' && catId){
+    setTimeout(()=>{
+      const el=document.getElementById('cat-'+catId);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+    },250);
+  }
+  // Re-run number animation if home
+  if(id==='home') setTimeout(animateNumbers,300);
+}
+function gotoCat(c){goTo('menu',c)}
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);goTo(h||'home')});
+document.querySelectorAll('[data-nav]').forEach(a=>{
+  a.addEventListener('click',e=>{e.preventDefault();goTo(a.dataset.nav)});
+});
+// Init from hash
+(function(){const h=location.hash.slice(1);if(h && pages.includes(h)) goTo(h);})();
+
+// ===== SIDEBAR =====
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('on')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('on')}
+
+// ===== NUMBERS COUNTER =====
+function animateNumbers(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target = parseFloat(el.dataset.count);
+    const dec = parseInt(el.dataset.dec||'0');
+    const obj = {v:0};
+    gsap.to(obj,{v:target,duration:1.8,ease:'power2.out',onUpdate:()=>{
+      el.textContent = dec ? obj.v.toFixed(dec)<script>setTimeout(function(){try{document.querySelectorAll("[class*=preload],[id*=preload],[class*=loader],[id*=loader]").forEach(function(e){e.style.display="none"});document.body.style.opacity="1";document.body.style.visibility="visible";}catch(e){}},7000);</script>
